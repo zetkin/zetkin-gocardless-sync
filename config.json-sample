@@ -1,4 +1,6 @@
 {
+    "ZETKIN_DOMAIN": "dev.zetkin.org",
+    "ZETKIN_USE_TLS": false,
     "ZETKIN_CLIENT_ID": "",
     "ZETKIN_CLIENT_SECRET": "",
     "ZETKIN_GRANT": "",
