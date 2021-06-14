@@ -1,0 +1,9 @@
+{
+  "name": "uvw-sync",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "gocardless-nodejs": "^2.1.0"
+  }
+}
