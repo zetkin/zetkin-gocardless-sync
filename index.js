@@ -41,9 +41,33 @@ const syncUtil = require('./lib/syncUtil');
 
     const syncer = await syncUtil.init(gocardless, z, config);
 
-    const report = await syncer.syncMonth(2021, 0);
-
+    report = await syncer.syncMonth(2021, 1);
     console.log('Found: ', report.foundInZetkin.length);
     console.log('Missing: ', report.missingInZetkin.length);
     console.log('Unpaid: ', Object.values(report.zetkinChecklist).filter(found => !found).length);
+    console.log('Errors', report.errors);
+
+    report = await syncer.syncMonth(2021, 2);
+    console.log('Found: ', report.foundInZetkin.length);
+    console.log('Missing: ', report.missingInZetkin.length);
+    console.log('Unpaid: ', Object.values(report.zetkinChecklist).filter(found => !found).length);
+    console.log('Errors', report.errors);
+
+    report = await syncer.syncMonth(2021, 3);
+    console.log('Found: ', report.foundInZetkin.length);
+    console.log('Missing: ', report.missingInZetkin.length);
+    console.log('Unpaid: ', Object.values(report.zetkinChecklist).filter(found => !found).length);
+    console.log('Errors', report.errors);
+
+    report = await syncer.syncMonth(2021, 4);
+    console.log('Found: ', report.foundInZetkin.length);
+    console.log('Missing: ', report.missingInZetkin.length);
+    console.log('Unpaid: ', Object.values(report.zetkinChecklist).filter(found => !found).length);
+    console.log('Errors', report.errors);
+
+    report = await syncer.syncMonth(2021, 5);
+    console.log('Found: ', report.foundInZetkin.length);
+    console.log('Missing: ', report.missingInZetkin.length);
+    console.log('Unpaid: ', Object.values(report.zetkinChecklist).filter(found => !found).length);
+    console.log('Errors', report.errors);
 })();
