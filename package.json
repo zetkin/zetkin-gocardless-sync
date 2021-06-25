@@ -6,6 +6,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "gocardless-nodejs": "^2.1.0",
+    "yaml": "^1.10.2",
     "zetkin": "^1.3.1"
   }
 }
