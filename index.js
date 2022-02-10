@@ -1,7 +1,7 @@
-const config = require('./config.json');
-const { initZetkin } = require('./lib/zetkin');
-const gocardless = require('./lib/gocardless');
-const syncUtil = require('./lib/syncUtil');
+const config = require("./config.json");
+const { initZetkin } = require("./lib/zetkin");
+const gocardless = require("./lib/gocardless");
+const syncUtil = require("./lib/syncUtil");
 
 (async () => {
     gocardless.initClient(config);
@@ -17,14 +17,20 @@ const syncUtil = require('./lib/syncUtil');
     reports.push(await syncer.syncMonth(2021, 4));
     reports.push(await syncer.syncMonth(2021, 5));
 
-    console.log('reports:');
-    reports.forEach(report => {
-        console.log('  - date: ', report.date);
-        console.log('    duration: ', report.duration);
-        console.log('    found: ', report.foundInZetkin.length);
-        console.log('    missing: ', report.missingInZetkin.length);
-        console.log('    ignored: ', report.ignored.length);
-        console.log('    unpaid: ', Object.values(report.zetkinChecklist).filter(found => !found).length);
-        console.log('    errors: ', report.errors.length);
+    await syncer.syncNumbers();
+
+    console.log("reports:");
+    reports.forEach((report) => {
+        console.log("  - date: ", report.date);
+        console.log("    duration: ", report.duration);
+        console.log("    found: ", report.foundInZetkin.length);
+        console.log("    missing: ", report.missingInZetkin.length);
+        console.log("    ignored: ", report.ignored.length);
+        console.log(
+            "    unpaid: ",
+            Object.values(report.zetkinChecklist).filter((found) => !found)
+                .length
+        );
+        console.log("    errors: ", report.errors.length);
     });
 })();
