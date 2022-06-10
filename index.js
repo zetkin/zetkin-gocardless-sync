@@ -1,23 +1,66 @@
+const yargs = require("yargs");
+
 const config = require("./config.json");
 const { initZetkin } = require("./lib/zetkin");
 const gocardless = require("./lib/gocardless");
 const syncUtil = require("./lib/syncUtil");
 
 (async () => {
+    const args = yargs
+        .option("gocardless", {
+            alias: "g",
+            description: "Sync N months from gocardless data",
+            type: "number",
+        })
+        .option("status", {
+            alias: "s",
+            description: "Sync payment status from monthly tags",
+            type: "boolean",
+        })
+        .option("numbers", {
+            alias: "n",
+            description: "Sync membership numbers",
+            type: "boolean",
+        });
+
+    const argv = await args.argv;
+    const preloadPeople = !!argv.gocardless || !!argv.numbers;
+    const preloadPayments = !!argv.gocardless;
+
+    if (!argv.gocardless && !argv.numbers && !argv.status) {
+        args.showHelp();
+        return;
+    }
+
     gocardless.initClient(config);
 
     const z = await initZetkin(config);
-    const syncer = await syncUtil.init(gocardless, z, config);
+    const syncer = await syncUtil.init(gocardless, z, config, {
+        preloadPayments,
+        preloadPeople,
+    });
     const reports = [];
 
-    reports.push(await syncer.syncMonth(2021, 0));
-    reports.push(await syncer.syncMonth(2021, 1));
-    reports.push(await syncer.syncMonth(2021, 2));
-    reports.push(await syncer.syncMonth(2021, 3));
-    reports.push(await syncer.syncMonth(2021, 4));
-    reports.push(await syncer.syncMonth(2021, 5));
+    if (argv.gocardless) {
+        let diff = argv.gocardless;
 
-    await syncer.syncNumbers();
+        while (diff-- > 0) {
+            const date = new Date();
+            date.setMonth(date.getMonth() - diff);
+
+            reports.push(
+                await syncer.syncMonth(date.getFullYear(), date.getMonth())
+            );
+        }
+    }
+
+    if (argv.numbers) {
+        await syncer.syncNumbers();
+    }
+
+    if (argv.status) {
+        await syncer.trafficLights();
+    }
 
     console.log("reports:");
     reports.forEach((report) => {
